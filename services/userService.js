@@ -7,32 +7,58 @@ class UserService {
     if (!user) {
       return null;
     }
-    return user;
+    
+    const removedIds = {
+      "users": user.map( user =>{
+        const {id, ...noIds} = user;
+        return noIds
+      })
+    }
+
+    return  removedIds
   }
-  update(id,dataToUpdate){
-    const user = userRepository.update(id,dataToUpdate)
+  update(idUser,dataToUpdate){
+    const user = userRepository.update(idUser,dataToUpdate)
     if (!user) {
       return null;
     }
-    return user;
+    const {id, ...userResponse} = user
+      return userResponse;
   }
-  search(id) {
-    const user = userRepository.getOne(id);
+  search(idUser) {
+    const user = userRepository.getOne(idUser);
     if (!user) {
       return null;
     }
-    return user;
+    const {id, ...userResponse} = user
+      return userResponse;
   }
   create(data) {
-    const user = userRepository.create({params: data})
-    if (!user) {
-      return null;
+    const {users} = this.findAll()
+    const checkUser = users.map(user => {
+      if(user.email == data.email){
+        return 'User already taken'
+      }
+      if(user.phoneNumber == data.phoneNumber){
+        return 'Cellphone already taken'
+      }
+    })
+  const filteredArray = checkUser.filter((element) => element !== undefined);
+    if(!filteredArray.length == 0){
+      return filteredArray
+    }else{
+      const user = userRepository.create(data)
+      if (!user) {
+        return null;
+      }
+      const {id, ...userResponse} = user
+      return userResponse;
     }
-    return user;
+
   }
-  delete(id) {
-    const user = userRepository.delete(id)
-    return user
+  delete(idUser) {
+    const user = userRepository.delete(idUser)
+    return user;
   }
 }
 

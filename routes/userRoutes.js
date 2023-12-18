@@ -15,10 +15,10 @@ router.get('/:id', (req, res, next) => {
   const id = req.params
   return res.json({user: userService.search(id)})
 });
-router.post('/', (req, res, next) => {
+router.post('/', createUserValid, (req, res, next) => {
   return res.json({user: userService.create(req.body)})
 });
-router.put('/:id', (req, res, next) => {
+router.put('/:id', updateUserValid, (req, res, next) => {
   const {id} =   req.params
   console.log(req.params)
   return res.json({user: userService.update(id,req.body)})
